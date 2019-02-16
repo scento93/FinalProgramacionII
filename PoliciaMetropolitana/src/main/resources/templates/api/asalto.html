@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Gestion De Datos</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div class="container" align="center" style="margin-top: 20px">
+    <img src="/img/logo.png" width="87" height="100" style="background: none">
+    <h1 style="margin-top: 10px">Sistema de la Policia Metropolitana</h1>
+    <h2>Asaltos</h2>
+    <br/>
+    <br/>
+    <button style="width: 15%" class="btn btn-outline-dark btn-lg" id="muestraTabla">Consultar dato</button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraIngreso">Ingresar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEditar">Editar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEliminar">Eliminar dato
+    </button>
+    <br/>
+
+    <h4 id="eliminarLabel" style="display:none;margin-top: 10px">Seleccione dato a eliminar</h4>
+
+    <div id="ingresarDiv" style="display:none;margin-top: 15px">
+        <h3>Ingresar nuevo Asalto</h3>
+        <form th:object="${AsaltoForm}" th:action="@{/api/asalto}" method="POST">
+            <div class="input-group mb-3" style="width: 90%;margin-top: 15px">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="fechaAsaltoLabel" style="width: 65px">Fecha</span>
+                </div>
+                <input style="width: 15%" type="date" name="fechaAsalto" class="form-control" aria-label="Default"
+                       aria-describedby="fechaAsaltoLabel">
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="sucursalAsaltoLabel" style="width: 140px">Codigo Sucursal</span>
+                </div>
+                <select class="custom-select" id="sucursalAsalto" name="sucursalAsalto">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="sucursal : ${sucursales}"
+                            th:value="${sucursal}"
+                            th:text="${sucursal}"></option>
+                </select>
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="claveDetenidoLabel" style="width: 145px">Clave Detenido</span>
+                </div>
+                <select class="custom-select" id="claveDetenido" name="claveDetenido">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="detenido : ${detenidos}"
+                            th:value="${detenido}"
+                            th:text="${detenido}"></option>
+                </select>
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="juezEncargadoLabel" style="width: 145px">Juez Encargado</span>
+                </div>
+                <select class="custom-select" id="juezEncargado" name="juezEncargado">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="juez : ${jueces}"
+                            th:value="${juez}"
+                            th:text="${juez}"></option>
+                </select>
+                <span style="width: 40px"></span>
+
+                <div class="input-group-prepend">
+                    <label class="form-check-label" for="condenado">
+                        Condenado
+                    </label>
+                    <input class="form-check-input" type="checkbox" value="true" id="condenado" name="condenado">
+                </div>
+                <div class="input-group mb-3" id="condenaDiv" style="display: none;margin-top: 20px;width: 40%">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="condenaLabel" style="width: 100px">Condena</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Default" aria-describedby="condenaLabel"
+                           id="condena" name="condena">
+                </div>
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Ingresar"/>
+        </form>
+    </div>
+
+    <div id="editarDiv" style="display:none">
+        <h3>Editar un Asalto</h3>
+        <h4 style="margin-top: 10px">Seleccione dato a Editar</h4>
+        <form th:object="${AsaltoEditForm}" th:action="@{/api/editarAsalto}" method="POST">
+            <div class="input-group mb-3" style="width: 90%;margin-top: 15px">
+                <input type="hidden" id="idedit" name="id">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="fechaAsaltoeditLabel" style="width: 65px">Fecha</span>
+                </div>
+                <input style="width: 15%" type="date"id="fechaasaltoedit" name="fechaAsalto" class="form-control" aria-label="Default"
+                       aria-describedby="fechaAsaltoLabel">
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="sucursalAsaltoEditLabel" style="width: 140px">Codigo Sucursal</span>
+                </div>
+                <select class="custom-select" id="sucursalasaltoedit" name="sucursalAsalto">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="sucursal : ${sucursales}"
+                            th:value="${sucursal}"
+                            th:text="${sucursal}"></option>
+                </select>
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="claveDetenidoEditLabel" style="width: 145px">Clave Detenido</span>
+                </div>
+                <select class="custom-select" id="clavedetenidoedit" name="claveDetenido">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="detenido : ${detenidos}"
+                            th:value="${detenido}"
+                            th:text="${detenido}"></option>
+                </select>
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="juezEncargadoEditLabel" style="width: 145px">Juez Encargado</span>
+                </div>
+                <select class="custom-select" id="juezencargadoedit" name="juezEncargado">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="juez : ${jueces}"
+                            th:value="${juez}"
+                            th:text="${juez}"></option>
+                </select>
+                <span style="width: 40px"></span>
+
+                <div class="input-group-prepend">
+                    <label class="form-check-label" for="condenadoedit">
+                        Condenado
+                    </label>
+                    <input class="form-check-input" type="checkbox" value="true" id="condenadoedit" name="condenado">
+                </div>
+                <div class="input-group mb-3" id="condenaeditDiv" style="display: none;margin-top: 20px;width: 40%">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="condenaeditLabel" style="width: 100px">Condena</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Default" aria-describedby="condenaeditLabel"
+                           id="condenaedit" name="condena">
+                </div>
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Editar"/>
+        </form>
+    </div>
+
+    <div id="consultarDiv" style="display:none">
+        <h4 style="margin-top: 15px">Ingrese Codigo de Sucursal o Vigilante</h4>
+        <form>
+            <div class="input-group mb-3" style="width: 20%">
+                <input type="text" class="form-control" placeholder="Buscar" aria-label="Search" id="searchId"
+                       name="searchId" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" onclick="buscarAsaltoBySucursal()">
+                        Buscar por Sucursal
+                    </button>
+                    <button class="btn btn-outline-secondary" type="button" onclick="buscarAsaltoByDetenido()">
+                        Buscar por Detenido
+                    </button>
+                </div>
+            </div>
+            <div style="margin-top: 15px" id="resultsBlock">
+
+            </div>
+        </form>
+    </div>
+
+
+    <h4 id="errorNoSeleccion" style="color: #b71824;display: none">Por favor, seleccione un elemento</h4>
+    <h4 id="errorNoInput" style="color: #b71824;display: none">Por favor, ingrese un ID</h4>
+    <button id="accionEliminar" class="btn btn-outline-dark btn-lg" style="display:none;margin-top: 10px">Eliminar
+    </button>
+
+
+    <br/>
+    <div id="AsaltoDatablock" style="margin-top: 10px;margin-bottom: 50px">
+        <table class="table" id="AsaltoDatatable" style="cursor: pointer">
+            <thead class="thead-dark" align="center">
+            <tr>
+                <th style="width: 18%">Fecha</th>
+                <th style="width: 18%">Cod. Sucursal</th>
+                <th style="width: 18%">Clave Detenido</th>
+                <th style="width: 18%">Juez Encargado</th>
+                <th style="width: 18%">Condenado</th>
+                <th style="width: 18%">Condena</th>
+            </tr>
+            </thead>
+            <tbody align="center" style="cursor: pointer">
+            <tr th:each="asalto : ${asaltos}">
+                <td style="display: none" th:text="${asalto.id}">id</td>
+                <td style="display: none" th:text="${asalto.fechaAsalto}">id</td>
+                <td th:text="${#temporals.format(asalto.fechaAsalto,'dd-MM-yyyy')}">Fecha</td>
+                <td th:text="${asalto.sucursalAsalto}">Cod. Sucursal</td>
+                <td th:text="${asalto.claveDetenido}">Clave Detenido</td>
+                <td th:text="${asalto.juezEncargado}">Juez Encargado</td>
+                <div th:if="!${asalto.condenado}">
+                    <td>No</td>
+                    <td>N/A</td>
+                </div>
+                <div th:if="${asalto.condenado}">
+                    <td>Si</td>
+                    <td th:text="${asalto.condena}">Condena</td>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"/>
+
+<script src="jquery/asalto.js"></script>
+<script src="jquery/managerBotones.js"></script>
+</body>
+</html>

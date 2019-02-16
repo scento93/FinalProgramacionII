@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Gestion De Datos</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div class="container" align="center" style="margin-top: 20px">
+    <img src="/img/logo.png" width="87" height="100" style="background: none">
+    <h1 style="margin-top: 10px">Sistema de la Policia Metropolitana</h1>
+    <h2>Contrataciones</h2>
+    <br/>
+    <br/>
+    <button style="width: 15%" class="btn btn-outline-dark btn-lg" id="muestraTabla">Consultar dato</button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraIngreso">Ingresar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEditar">Editar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEliminar">Eliminar dato
+    </button>
+    <br/>
+
+    <h4 id="eliminarLabel" style="display:none;margin-top: 10px">Seleccione dato a eliminar</h4>
+
+    <div id="ingresarDiv" style="display:none;margin-top: 15px">
+        <h3>Ingresar nueva Contratacion</h3>
+        <form th:object="${ContratacionForm}" th:action="@{/api/contratacion}" method="POST">
+            <div class="input-group mb-3" style="width: 80%;margin-top: 15px">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="fechaLabel" style="width: 65px">Fecha</span>
+                </div>
+                <input style="width: 15%" type="date" name="fecha" class="form-control" aria-label="Default" aria-describedby="fechaLabel">
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="codSucursalLabel" style="width: 140px">Codigo Sucursal</span>
+                </div>
+                <select class="custom-select" id="codSucursal" name="codSucursal">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="sucursal : ${sucursales}"
+                            th:value="${sucursal}"
+                            th:text="${sucursal}"></option>
+                </select>
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="codVigilanteLabel" style="width: 145px">Codigo Vigilante</span>
+                </div>
+                <select class="custom-select" id="codVigilante" name="codVigilante">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="vigilante : ${vigilantes}"
+                            th:value="${vigilante}"
+                            th:text="${vigilante}"></option>
+                </select>
+                <span style="width: 40px"></span>
+                <div class="input-group-prepend">
+                    <label class="form-check-label" for="conArma">
+                        Con Arma
+                    </label>
+                    <input class="form-check-input" type="checkbox" value="true" id="conArma" name="conArma">
+                </div>
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Ingresar"/>
+        </form>
+    </div>
+
+    <div id="editarDiv" style="display:none">
+        <h3>Editar una Contratacion</h3>
+        <h4 style="margin-top: 10px">Seleccione dato a Editar</h4>
+        <form th:object="${ContratacionEditForm}" th:action="@{/api/editarContratacion}" method="POST">
+            <div class="input-group mb-3" style="width: 80%;margin-top: 15px">
+                <input type="hidden" id="idedit" name="id">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="fechaeditLabel" style="width: 65px">Fecha</span>
+                </div>
+                <input style="width: 15%" type="date" id="fechaedit" name="fecha" class="form-control" aria-label="Default" aria-describedby="fechaLabel">
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="codSucursaleditLabel" style="width: 140px">Codigo Sucursal</span>
+                </div>
+                <select class="custom-select" id="codsucursaledit" name="codSucursal">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="sucursal : ${sucursales}"
+                            th:value="${sucursal}"
+                            th:text="${sucursal}"></option>
+                </select>
+                <span style="width: 20px"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="codVigilanteeditLabel" style="width: 145px">Codigo Vigilante</span>
+                </div>
+                <select class="custom-select" id="codvigilanteedit" name="codVigilante">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="vigilante : ${vigilantes}"
+                            th:value="${vigilante}"
+                            th:text="${vigilante}"></option>
+                </select>
+                <span style="width: 40px"></span>
+
+                <div class="input-group-prepend">
+                    <label class="form-check-label" for="conarmaedit">
+                        Con Arma
+                    </label>
+                    <input class="form-check-input" type="checkbox" value="true" id="conarmaedit" name="conArma">
+                </div>
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Editar"/>
+        </form>
+    </div>
+
+    <div id="consultarDiv" style="display:none">
+        <h4 style="margin-top: 15px">Ingrese Codigo de Sucursal o Vigilante</h4>
+        <form>
+            <div class="input-group mb-3" style="width: 20%">
+                <input type="text" class="form-control" placeholder="Buscar" aria-label="Search" id="searchId"
+                       name="searchId" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" onclick="buscarContratacionBySucursal()">
+                        Buscar por Sucursal
+                    </button>
+                    <button class="btn btn-outline-secondary" type="button" onclick="buscarContratacionByVigilante()">
+                        Buscar por Vigilante
+                    </button>
+                </div>
+            </div>
+            <div style="margin-top: 15px" id="resultsBlock">
+
+            </div>
+        </form>
+    </div>
+
+
+    <h4 id="errorNoSeleccion" style="color: #b71824;display: none">Por favor, seleccione un elemento</h4>
+    <h4 id="errorNoInput" style="color: #b71824;display: none">Por favor, ingrese un ID</h4>
+    <button id="accionEliminar" class="btn btn-outline-dark btn-lg" style="display:none;margin-top: 10px">Eliminar
+    </button>
+
+
+    <br/>
+    <div id="ContratacionDatablock" style="margin-top: 10px;margin-bottom: 50px">
+        <table class="table" id="ContratacionDatatable" style="cursor: pointer">
+            <thead class="thead-dark" align="center">
+            <tr>
+                <th style="width: 25%">Fecha</th>
+                <th style="width: 25%">Cod. Sucursal</th>
+                <th style="width: 25%">Cod. Vigilante</th>
+                <th style="width: 25%">Arma</th>
+            </tr>
+            </thead>
+            <tbody align="center" style="cursor: pointer">
+            <tr th:each="contratacion : ${contrataciones}">
+                <td style="display: none" th:text="${contratacion.id}">id</td>
+                <td style="display: none" th:text="${contratacion.fecha}">id</td>
+                <td th:text="${#temporals.format(contratacion.fecha,'dd-MM-yyyy')}">Fecha</td>
+                <td th:text="${contratacion.codSucursal}">Cod. Sucursal</td>
+                <td th:text="${contratacion.codVigilante}">Cod. Vigilante</td>
+                <td th:if="!${contratacion.conArma}">Sin Arma</td>
+                <td th:if="${contratacion.conArma}">Con Arma</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"/>
+
+<script src="jquery/contratacion.js"></script>
+<script src="jquery/managerBotones.js"></script>
+</body>
+</html>

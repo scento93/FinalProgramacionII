@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="resultsList" th:unless="${#lists.isEmpty(jueces)}" id="results-block">
+    <div class="card" style="width: 35rem;" align="center">
+        <div class="card-body" align="center">
+            <h5 class="card-title">Resultado:</h5>
+            <table class="table">
+                <thead class="thead-dark" align="center">
+                <tr>
+                    <th style="width: 33.33%">Clave Juzgado</th>
+                    <th style="width: 33.33%">Nombre</th>
+                    <th style="width: 33.33%">Años de Servicio</th>
+                </tr>
+                </thead>
+                <tbody align="center" style="cursor: pointer">
+                <tr th:each="juez : ${jueces}">
+                    <td th:text="${juez.claveJuzgado}">Clave Juzgado</td>
+                    <td th:text="${juez.nombre}">Nombre</td>
+                    <td th:text="${juez.anosServicio}">Años de Servicio</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

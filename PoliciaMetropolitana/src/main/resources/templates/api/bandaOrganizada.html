@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Gestion De Datos</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div class="container" align="center" style="margin-top: 20px">
+    <img src="/img/logo.png" width="87" height="100" style="background: none">
+    <h1 style="margin-top: 10px">Sistema de la Policia Metropolitana</h1>
+    <h2>Bandas Organizadas</h2>
+    <br/>
+    <br/>
+    <button style="width: 15%" class="btn btn-outline-dark btn-lg" id="muestraTabla">Consultar dato</button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraIngreso">Ingresar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEditar">Editar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEliminar">Eliminar dato
+    </button>
+
+    <br/>
+
+
+    <h4 id="eliminarLabel" style="display:none;margin-top: 10px">Seleccione dato a eliminar</h4>
+
+    <div id="ingresarDiv" style="display:none;margin-top: 15px">
+        <h3>Ingresar nueva Banda Organizada</h3>
+        <form th:object="${BandaForm}" th:action="@{/api/bandaOrganizada}" method="POST">
+            <div class="input-group mb-3" style="width: 60%;margin-top: 15px">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="nroBandaLabel" style="width: 200px">Nro. de Banda</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="nroBandaLabel" id="nroBanda" name="nroBanda"
+                       autofocus="autofocus">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="cantMiembrosLabel" style="width: 200px">Cant. de Miembros</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="cantMiembrosLabel"
+                       id="cantMiembros" name="cantMiembros">
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Ingresar"/>
+        </form>
+    </div>
+
+    <div id="editarDiv" style="display:none">
+        <h3>Editar una Banda Organizada</h3>
+        <h4 style="margin-top: 10px">Seleccione dato a Editar</h4>
+        <form th:object="${BandaForm}" th:action="@{/api/editarBandaOrganizada}" method="POST">
+            <div class="input-group mb-3" style="width: 60%;margin-top: 15px">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="nroBandaEditLabel" style="width: 200px">Nro. de Banda</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="nroBandaEditLabel" id="nroBandaEdit" name="nroBanda"
+                       autofocus="autofocus">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="cantMiembrosEditLabel" style="width: 200px">Cant. de Miembros</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="cantMiembrosEditLabel"
+                       id="cantMiembrosEdit" name="cantMiembros">
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Editar"/>
+        </form>
+    </div>
+
+    <div id="consultarDiv" style="display:none">
+        <h4 style="margin-top: 15px">Ingrese Nro. de Banda</h4>
+        <form>
+            <div class="input-group mb-3" style="width: 20%">
+                <input type="text" class="form-control" placeholder="Buscar" aria-label="Search" id="searchId"
+                       name="searchId" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" onclick="buscarBandaById()">Buscar</button>
+                </div>
+            </div>
+            <div style="margin-top: 15px" id="resultsBlock">
+
+            </div>
+        </form>
+    </div>
+
+    <h4 id="errorNoSeleccion" style="color: #b71824;display: none">Por favor, seleccione un elemento</h4>
+    <h4 id="errorNoInput" style="color: #b71824;display: none">Por favor, ingrese un ID</h4>
+    <button id="accionEliminar" class="btn btn-outline-dark btn-lg" style="display:none;margin-top: 10px">Eliminar
+    </button>
+
+    <br/>
+    <div id="BandasDatablock" style="margin-top: 10px;margin-bottom: 50px">
+        <table class="table" id="BandasDatatable" style="cursor: pointer">
+            <thead class="thead-dark" align="center">
+            <tr>
+                <th style="width: 33.33%">Nro. de Banda</th>
+                <th style="width: 33.33%">Cant. de Miembros</th>
+            </tr>
+            </thead>
+            <tbody align="center" style="cursor: pointer">
+            <tr th:each="banda : ${bandasOrganizadas}">
+                <td th:text="${banda.nroBanda}">Nro. de Banda</td>
+                <td th:text="${banda.cantMiembros}">Cant. de Miembros</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"/>
+
+<script src="jquery/bandaOrganizada.js"></script>
+<script src="jquery/managerBotones.js"></script>
+</body>
+</html>

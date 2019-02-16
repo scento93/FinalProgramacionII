@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Gestion De Datos</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div class="container" align="center" style="margin-top: 20px">
+    <img src="/img/logo.png" width="87" height="100" style="background: none">
+    <h1 style="margin-top: 10px">Sistema de la Policia Metropolitana</h1>
+    <h2>Sucursales Bancarias</h2>
+    <br/>
+    <br/>
+    <button style="width: 15%" class="btn btn-outline-dark btn-lg" id="muestraTabla">Consultar dato</button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraIngreso">Ingresar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEditar">Editar Dato
+    </button>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" style="width: 15%" class="btn btn-outline-dark btn-lg"
+            id="muestraEliminar">Eliminar dato
+    </button>
+
+    <br/>
+
+    <h4 id="eliminarLabel" style="display:none;margin-top: 10px">Seleccione dato a eliminar</h4>
+
+    <div id="ingresarDiv" style="display:none;margin-top: 15px">
+        <h3>Ingresar nueva Sucursal</h3>
+        <form th:object="${SucursalForm}" th:action="@{/api/sucursalBancaria}" method="POST">
+            <div class="input-group mb-3" style="margin-top: 15px">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="codigoLabel" style="width: 70px">Clave</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="codigoLabel" id="codigo"
+                       name="codigo"
+                       autofocus="autofocus">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="nroEmpleadosLabel" style="width: 160px">Nro. de Empleados</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default"
+                       aria-describedby="nroEmpleadosLabel"
+                       id="nroEmpleados" name="nroEmpleados">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="direccionLabel" style="width: 160px">Direccion</span>
+                </div>
+                <input style="width: 28%" type="text" class="form-control" aria-label="Default"
+                       aria-describedby="direccionLabel"
+                       id="direccion" name="direccion">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="entidadCentral">Entidad Central</label>
+                </div>
+                <select class="custom-select" id="entidadCentral" name="entidadCentral">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="entidad : ${entidades}"
+                            th:value="${entidad}"
+                            th:text="${entidad}"></option>
+                </select>
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Ingresar"/>
+        </form>
+    </div>
+
+    <div id="editarDiv" style="display:none">
+        <h3>Editar una Sucursal</h3>
+        <h4 style="margin-top: 10px">Seleccione dato a Editar</h4>
+        <form th:object="${SucursalForm}" th:action="@{/api/editarSucursal}" method="POST">
+            <div class="input-group mb-3" style="margin-top: 15px">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="codigoeditLabel" style="width: 70px">Clave</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="codigoeditLabel" id="codigoedit"
+                       name="codigo"
+                       autofocus="autofocus">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="nroEmpleadoseditLabel" style="width: 160px">Nro. de Empleados</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default"
+                       aria-describedby="nroEmpleadoseditLabel"
+                       id="nroempleadosedit" name="nroEmpleados">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="direccioneditLabel" style="width: 160px">Direccion</span>
+                </div>
+                <input style="width: 28%" type="text" class="form-control" aria-label="Default"
+                       aria-describedby="direccioneditLabel"
+                       id="direccionedit" name="direccion">
+                <span style="width: 20px"></span>
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="entidadcentraledit">Entidad Central</label>
+                </div>
+                <select class="custom-select" id="entidadcentraledit" name="entidadCentral">
+                    <option selected>Elegir</option>
+                    <option style="background: white"
+                            th:each="entidad : ${entidades}"
+                            th:value="${entidad}"
+                            th:text="${entidad}"></option>
+                </select>
+            </div>
+            <input class="btn btn-outline-dark btn-lg" type="submit" value="Editar"/>
+        </form>
+    </div>
+
+    <div id="consultarDiv" style="display:none">
+        <h4 style="margin-top: 15px">Ingrese codigo de Sucursal</h4>
+        <form>
+            <div class="input-group mb-3" style="width: 20%">
+                <input type="text" class="form-control" placeholder="Buscar" aria-label="Search" id="searchId"
+                       name="searchId" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" onclick="buscarDetenidoById()">Buscar
+                    </button>
+                </div>
+            </div>
+            <div style="margin-top: 15px" id="resultsBlock">
+
+            </div>
+        </form>
+    </div>
+
+
+    <h4 id="errorNoSeleccion" style="color: #b71824;display: none">Por favor, seleccione un elemento</h4>
+    <h4 id="errorNoInput" style="color: #b71824;display: none">Por favor, ingrese un ID</h4>
+    <button id="accionEliminar" class="btn btn-outline-dark btn-lg" style="display:none;margin-top: 10px">Eliminar
+    </button>
+
+
+    <br/>
+    <div id="SucursalDatablock" style="margin-top: 10px;margin-bottom: 50px">
+        <table class="table" id="SucursalDatatable" style="cursor: pointer;align:center">
+            <thead class="thead-dark" align="center">
+            <tr>
+                <th style="width: 25%">Codigo</th>
+                <th style="width: 25%">Nro. de Empleados</th>
+                <th style="width: 25%">Direccion</th>
+                <th style="width: 25%">Entidad</th>
+            </tr>
+            </thead>
+            <tbody align="center" style="cursor: pointer">
+            <tr th:each="sucursal : ${sucursales}">
+                <td th:text="${sucursal.codigo}">Codigo</td>
+                <td th:text="${sucursal.nroEmpleados}">Nro. de Empleados</td>
+                <td th:text="${sucursal.direccion}">Direccion</td>
+                <td th:text="${sucursal.entidadCentral}">Entidad Central</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"/>
+
+<script src="jquery/sucursalBancaria.js"></script>
+<script src="jquery/managerBotones.js"></script>
+</body>
+</html>

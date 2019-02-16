@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+
+    <div class="starter-template">
+        <h1>Proyecto Final Programacion II</h1>
+        <h2>Alumno: Santiago Cento</h2>
+        <h2>Profesor: D.  Diego Pablo Corsi</h2>
+        <div style="margin-top: 20px;">
+            <a  class="btn btn-lg btn-outline-dark" th:href="@{/home}" >Volver</a>
+        </div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

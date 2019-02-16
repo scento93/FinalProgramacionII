@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <title>Gestion De Datos</title>
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div class="container" align="center" style="margin-top: 20px">
+    <img src="/img/logo.png" width="87" height="100" style="background: none">
+    <h1 style="margin-top: 10px">Sistema de la Policia Metropolitana</h1>
+    <h2>Administrador N° <span sec:authentication="name"></span></h2>
+    <h3>Para comenzar, seleccione un tipo de dato</h3>
+    <div style="margin-top: 40px;">
+        <a  class="btn btn-lg btn-outline-dark" th:href="@{/home}" >Volver</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="resultsList" th:unless="${#lists.isEmpty(sucursales)}" id="results-block">
+    <div class="card" style="width: 35rem;" align="center">
+        <div class="card-body" align="center">
+            <h5 class="card-title">Resultado:</h5>
+            <table class="table">
+                <thead class="thead-dark" align="center">
+                <tr>
+                    <th style="width: 25%">Codigo</th>
+                    <th style="width: 25%">Nro. de Empleados</th>
+                    <th style="width: 25%">Direccion</th>
+                    <th style="width: 25%">Entidad Central</th>
+                </tr>
+                </thead>
+                <tbody align="center" style="cursor: pointer">
+                <tr th:each="sucursal : ${sucursales}">
+                    <td th:text="${sucursal.codigo}">Codigo</td>
+                    <td th:text="${sucursal.nroEmpleados}">Nro. de Empleados</td>
+                    <td th:text="${sucursal.direccion}">Direccion</td>
+                    <td th:text="${sucursal.entidadCentral}">Entidad</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

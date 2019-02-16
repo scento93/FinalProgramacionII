@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+
+<div th:fragment="resultsList" id="results-block">
+    <h4 th:if="${#lists.isEmpty(asaltos)}">Id no encontrado</h4>
+    <div  th:unless="${#lists.isEmpty(asaltos)}" class="card" style="width: 45rem;" align="center">
+        <div class="card-body" align="center">
+            <h5 class="card-title">Resultado:</h5>
+            <table class="table">
+                <thead class="thead-dark" align="center">
+                <tr>
+                    <th style="width: 18%">Fecha</th>
+                    <th style="width: 18%">Cod. Sucursal</th>
+                    <th style="width: 18%">Clave Detenido</th>
+                    <th style="width: 18%">Juez Encargado</th>
+                    <th style="width: 18%">Condenado</th>
+                    <th style="width: 18%">Condena</th>
+                </tr>
+                </thead>
+                <tbody align="center" style="cursor: pointer">
+                <tr th:each="asalto : ${asaltos}">
+                    <td th:text="${asalto.fechaAsalto}">Fecha</td>
+                    <td th:text="${asalto.sucursalAsalto}">Cod. Sucursal</td>
+                    <td th:text="${asalto.claveDetenido}">Clave Detenido</td>
+                    <td th:text="${asalto.juezEncargado}">Juez Encargado</td>
+                    <div th:if="!${asalto.condenado}">
+                        <td>No</td>
+                        <td>N/A</td>
+                    </div>
+                    <div th:if="${asalto.condenado}">
+                        <td>Si</td>
+                        <td th:text="${asalto.condena}">Condena</td>
+                    </div>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

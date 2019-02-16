@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="resultsList" th:unless="${#lists.isEmpty(bandasOrganizadas)}" id="results-block">
+    <div class="card" style="width: 25rem;" align="center">
+        <div class="card-body" align="center">
+            <h5 class="card-title">Resultado:</h5>
+            <table class="table">
+                <thead class="thead-dark" align="center">
+                <tr>
+                    <th style="width: 33.33%">Nro. de Banda</th>
+                    <th style="width: 33.33%">Cant. de Miembros</th>
+                </tr>
+                </thead>
+                <tbody align="center">
+                <tr th:each="banda : ${bandasOrganizadas}">
+                    <td th:text="${banda.nroBanda}">Nro. de Banda</td>
+                    <td th:text="${banda.cantMiembros}">Cant. de Miembros</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

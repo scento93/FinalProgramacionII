@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+
+<div th:fragment="resultsList" id="results-block">
+    <h4 th:if="${#lists.isEmpty(contrataciones)}">Id no encontrado</h4>
+    <div  th:unless="${#lists.isEmpty(contrataciones)}" class="card" style="width: 35rem;" align="center">
+        <div class="card-body" align="center">
+            <h5 class="card-title">Resultado:</h5>
+            <table class="table">
+                <thead class="thead-dark" align="center">
+                <tr>
+                    <th style="width: 25%">Fecha</th>
+                    <th style="width: 25%">Cod. Sucursal</th>
+                    <th style="width: 25%">Cod. Vigilante</th>
+                    <th style="width: 25%">Arma</th>
+                </tr>
+                </thead>
+                <tbody align="center" style="cursor: pointer">
+                <tr th:each="contratacion : ${contrataciones}">
+                    <td th:text="${contratacion.fecha}">Fecha</td>
+                    <td th:text="${contratacion.codSucursal}">Cod. Sucursal</td>
+                    <td th:text="${contratacion.codVigilante}">Cod. Vigilante</td>
+                    <td th:if="!${contratacion.conArma}">Sin Arma</td>
+                    <td th:if="${contratacion.conArma}">Con Arma</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

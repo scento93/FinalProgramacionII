@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="resultsList" th:unless="${#lists.isEmpty(vigilantes)}" id="results-block">
+    <div class="card" style="width: 25rem;" align="center">
+        <div class="card-body" align="center">
+            <h5 class="card-title">Resultado:</h5>
+            <table class="table">
+                <thead class="thead-dark" align="center">
+                <tr>
+                    <th style="width: 33.33%">Codigo</th>
+                    <th style="width: 33.33%">Contraseña</th>
+                    <th style="width: 33.33%">Edad</th>
+                </tr>
+                </thead>
+                <tbody align="center">
+                <tr th:each="vigilante : ${vigilantes}">
+                    <td th:text="${vigilante.id}">id</td>
+                    <td th:text="${vigilante.password}">Contraseña</td>
+                    <td th:text="${vigilante.edad}">Edad</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
